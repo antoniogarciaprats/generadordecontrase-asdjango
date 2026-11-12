@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <title>Fábrica de contraseñas</title>
+        <link rel="stylesheet" href="{% static 'generador/estilo.css' %}">
+    </head>
+
+    <body>
+        <main class="panel">
+        <h1>🔐 Fábrica de contraseñas</h1>
+        <form method="get" class="opciones">
+            {{ form.non_field_errors }}
+            <label>{{ form.longitud.label }}: {{ form.longitud }}</label>
+            {{ form.longitud.errors }}
+            <div class="casillas">
+                <label>{{ form.minusculas }} {{ form.minusculas.label }}</label>
+                <label>{{ form.mayusculas }} {{ form.mayusculas.label }}</label>
+                <label>{{ form.numeros }} {{ form.numeros.label }}</label>
+                <label>{{ form.simbolos }} {{ form.simbolos.label }}</label>
+            </div>
+            <button type="submit">Generar</button>
+        </form>
+        {% if fortaleza %}
+        <section class="resultado">
+            <p>Fortaleza: <strong style="color: {{ fortaleza.color }}">
+                {{ fortaleza.nivel }}</strong> ({{ fortaleza.bits }} bits)</p>
+        <div class="barra">
+            <div style="width: {{ fortaleza.porcentaje }}%;
+                background: {{ fortaleza.color }}"></div>
+        </div>
+        <ol class="claves">
+            {% for clave in claves %}
+            <li><code>{{ clave }}</code>
+            <button type="button" class="copiar"
+            data-clave="{{ clave }}">Copiar</button></li>
+            {% endfor %}
+        </ol>
+    </section>
+    {% endif %}
+ </main>
+<script>
+    document.querySelectorAll(".copiar").forEach(function (boton) {
+        boton.addEventListener("click", function () {
+    navigator.clipboard.writeText(boton.dataset.clave);
+        boton.textContent = "¡Copiada!";
+        });
+    });
+</script>
+</body>
+</html>
